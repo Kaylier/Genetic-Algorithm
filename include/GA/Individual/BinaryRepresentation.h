@@ -6,6 +6,10 @@
 
 namespace GA {
 
+    /**
+     * TODO: documentation
+     * @tparam N Number of bits
+     */
     template<size_t N>
     class BinaryRepresentation : public Representation, public std::bitset<N> {
 

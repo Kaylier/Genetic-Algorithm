@@ -7,6 +7,12 @@
 
 namespace GA {
 
+    /**
+     * Interface of a objective functor that can be bound to a GA::Engine.
+     * The functor must implement an operator() which returns the value associated
+     * to the given individual.
+     * @tparam Individual Type of individuals, must be a subclass of Representation
+     */
     template<class Individual>
     class Objective {
         static_assert(std::is_base_of<Representation, Individual>::value,
@@ -21,6 +27,11 @@ namespace GA {
         Objective &operator=(const Objective&) = default;
         Objective &operator=(Objective&&) = default;
 
+        /**
+         * Compute the objective value of an individual
+         * @param individual Individual to evaluate
+         * @return The value of the individual
+         */
         virtual double operator()(const Individual &individual) = 0;
 
     };

@@ -7,6 +7,12 @@
 
 namespace GA {
 
+    /**
+     * Interface of a crossover functor that can be bound to a GA::Engine.
+     * The functor must implement an operator() which mix two individuals to create
+     * a new one.
+     * @tparam Individual Type of individuals, must be a subclass of Representation
+     */
     template<class Individual>
     class Crossover {
         static_assert(std::is_base_of<Representation, Individual>::value,
@@ -21,6 +27,12 @@ namespace GA {
         Crossover &operator=(const Crossover&) = default;
         Crossover &operator=(Crossover&&) = default;
 
+        /**
+         * Generate a new individual based on two given ones.
+         * @param individual1 First individual
+         * @param individual2 Second individual
+         * @return A new individual
+         */
         virtual Individual operator()(const Individual &individual1, const Individual &individual2) = 0;
 
     };

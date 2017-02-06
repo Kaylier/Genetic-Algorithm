@@ -128,7 +128,7 @@ double GA::Engine<Individual>::getMean() const {
 }
 
 template<class Individual>
-double GA::Engine<Individual>::getMean(unsigned long count) const {
+double GA::Engine<Individual>::getMean(size_t count) const {
     assert(count <= population.size());
     double total = 0.;
     auto it = population.cbegin();
@@ -145,12 +145,12 @@ double GA::Engine<Individual>::getStandardDeviation() const {
 }
 
 template<class Individual>
-double GA::Engine<Individual>::getStandardDeviation(unsigned int count) const {
+double GA::Engine<Individual>::getStandardDeviation(size_t count) const {
     assert(count <= population.size());
     double mean = 0.;
     double meanOfSquares = 0.;
     auto it = population.cbegin();
-    for (int i = 0; i < count; ++i) {
+    for (size_t i = 0; i < count; ++i) {
         meanOfSquares += it->first * it->first;
         mean += it->first;
         it++;

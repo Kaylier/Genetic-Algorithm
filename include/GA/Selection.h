@@ -9,6 +9,11 @@
 
 namespace GA {
 
+    /**
+     * Interface of a selection functor that can be bound to a GA::Engine.
+     * The functor must implement an operator() which compute a selection on a population.
+     * @tparam Individual Type of individuals, must be a subclass of Representation
+     */
     template<class Individual>
     class Selection {
         static_assert(std::is_base_of<Representation, Individual>::value,

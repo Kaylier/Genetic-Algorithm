@@ -6,6 +6,10 @@
 
 namespace GA {
 
+    /**
+     * TODO: documentation
+     * @tparam Individual Type of individuals, must be a subclass of Representation
+     */
     template<class Individual>
     class ElitismSelection : public Selection<Individual> {
         static_assert(std::is_base_of<Representation, Individual>::value,
