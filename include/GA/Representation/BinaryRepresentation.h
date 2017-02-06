@@ -27,8 +27,8 @@ namespace GA {
 
     };
 
-    template class BinaryRepresentation<4>;
-
 }
+
+#include "GA/Representation/BinaryRepresentation.tpp"
 
 #endif //GENETICALGORITHM_BINARYINDIVIDUAL_H

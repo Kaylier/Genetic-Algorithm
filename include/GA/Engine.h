@@ -11,7 +11,7 @@
 #include "GA/Representation.h"
 #include "GA/Selection.h"
 
-#include "GA/Individual/BinaryRepresentation.h"
+#include "GA/Representation/BinaryRepresentation.h"
 
 namespace GA {
 
@@ -225,9 +225,8 @@ namespace GA {
 
     };
 
-    template
-    class Engine<BinaryRepresentation<4>>;
-
 }
+
+#include "GA/Engine.tpp"
 
 #endif //GENETICALGORITHM_ENGINE_H

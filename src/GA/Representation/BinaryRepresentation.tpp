@@ -1,6 +1,6 @@
 #include <cstdlib> // rand
 
-#include "GA/Individual/BinaryRepresentation.h"
+#include "GA/Representation/BinaryRepresentation.h"
 
 template<size_t N>
 GA::BinaryRepresentation<N>::BinaryRepresentation(unsigned long val) : Representation(), std::bitset<N>(val) {}

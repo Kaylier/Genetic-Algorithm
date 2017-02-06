@@ -4,7 +4,7 @@
 #include <bitset>
 #include "GA/Objective.h"
 #include "FacilityLocation/Instance.h"
-#include "GA/Individual/BinaryRepresentation.h"
+#include "GA/Representation/BinaryRepresentation.h"
 
 namespace FacilityLocation {
 

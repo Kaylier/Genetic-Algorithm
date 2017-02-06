@@ -2,7 +2,7 @@
 #define GENETICALGORITHM_SINGLEPOINTCROSSOVER_H
 
 #include "GA/Crossover.h"
-#include "GA/Individual/BinaryRepresentation.h"
+#include "GA/Representation/BinaryRepresentation.h"
 
 namespace GA {
 
@@ -30,8 +30,8 @@ namespace GA {
 
     };
 
-    template class SinglePointCrossover<BinaryRepresentation<4>>;
-
 }
+
+#include "GA/Crossover/SinglePointCrossover.tpp"
 
 #endif //GENETICALGORITHM_SINGLEPOINTCROSSOVER_H

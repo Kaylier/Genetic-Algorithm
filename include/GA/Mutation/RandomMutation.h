@@ -2,7 +2,7 @@
 #define GENETICALGORITHM_RANDOMMUTATION_H
 
 #include "GA/Mutation.h"
-#include "GA/Individual/BinaryRepresentation.h"
+#include "GA/Representation/BinaryRepresentation.h"
 
 namespace GA {
 
@@ -41,8 +41,8 @@ namespace GA {
 
     };
 
-    template class RandomMutation<BinaryRepresentation<4>>;
-
 }
+
+#include "GA/Mutation/RandomMutation.tpp"
 
 #endif //GENETICALGORITHM_RANDOMMUTATION_H

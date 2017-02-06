@@ -2,7 +2,7 @@
 #define GENETICALGORITHM_ELITISMSELECTION_H
 
 #include "GA/Selection.h"
-#include "GA/Individual/BinaryRepresentation.h"
+#include "GA/Representation/BinaryRepresentation.h"
 
 namespace GA {
 
@@ -40,8 +40,8 @@ namespace GA {
 
     };
 
-    template class ElitismSelection<BinaryRepresentation<4>>;
-
 }
+
+#include "GA/Selection/ElitismSelection.tpp"
 
 #endif //GENETICALGORITHM_ELITISMSELECTION_H
