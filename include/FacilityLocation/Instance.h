@@ -35,8 +35,8 @@ namespace FacilityLocation {
 
         size_t getNumberFacility() const;
         size_t getNumberCustomer() const;
-        double distance(unsigned int facility, unsigned int customer) const;
-        double cost(unsigned int facility) const;
+        double distance(size_t facility, size_t customer) const;
+        double cost(size_t facility) const;
 
     private:
         Instance(size_t numberCustomer);

@@ -22,12 +22,12 @@ void GA::ElitismSelection<Individual>::setProportionSurvival(double proportionSu
 template<class Individual>
 typename GA::ElitismSelection<Individual>::Population GA::ElitismSelection<Individual>::operator()
         (GA::ElitismSelection<Individual>::Population &population) {
-    size_t countToSave = (size_t) (population.size() * proportionSurvival);
+    size_t countToSave = (size_t) ((double) population.size() * proportionSurvival);
     if (countToSave < 1) {
         countToSave = 1;
     }
     auto it = population.begin();
-    for (countToSave; countToSave > 0; --countToSave) {
+    for (; countToSave > 0; --countToSave) {
         it++;
     }
     population.erase(it, population.end());
@@ -38,12 +38,12 @@ template<class Individual>
 typename GA::ElitismSelection<Individual>::Population GA::ElitismSelection<Individual>::operator()
         (const GA::ElitismSelection<Individual>::Population &population) {
     Population out;
-    size_t countToSave = (size_t) (population.size() * proportionSurvival);
+    size_t countToSave = (size_t) ((double) population.size() * proportionSurvival);
     if (countToSave < 1) {
         countToSave = 1;
     }
     auto it = population.begin();
-    for (countToSave; countToSave > 0; --countToSave) {
+    for (; countToSave > 0; --countToSave) {
         out.emplace(it->first, it->second);
         it++;
     }

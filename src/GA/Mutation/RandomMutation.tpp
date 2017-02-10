@@ -25,7 +25,7 @@ typename GA::RandomMutation<GA::BinaryRepresentation<N>>::Individual
 GA::RandomMutation<GA::BinaryRepresentation<N>>::operator()(
         GA::RandomMutation<GA::BinaryRepresentation<N>>::Individual &individual) {
     std::uniform_real_distribution<double> probaRand(0., 1.);
-    for (int n = 0; n < individual.size(); ++n) {
+    for (size_t n = 0; n < individual.size(); ++n) {
         if (probaRand(rnd) < probability) {
             individual.flip(n);
         }

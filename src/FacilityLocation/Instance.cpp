@@ -124,14 +124,14 @@ size_t FacilityLocation::Instance<NF>::getNumberCustomer() const {
 }
 
 template<size_t NF>
-double FacilityLocation::Instance<NF>::distance(unsigned int facility, unsigned int customer) const {
+double FacilityLocation::Instance<NF>::distance(size_t facility, size_t customer) const {
     assert(facility < numberFacility);
     assert(customer < numberCustomer);
     return distances[facility][customer];
 }
 
 template<size_t NF>
-double FacilityLocation::Instance<NF>::cost(unsigned int facility) const {
+double FacilityLocation::Instance<NF>::cost(size_t facility) const {
     assert(facility < numberFacility);
     return openingCost[facility];
 }
