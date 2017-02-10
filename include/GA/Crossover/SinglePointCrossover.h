@@ -1,6 +1,8 @@
 #ifndef GENETICALGORITHM_SINGLEPOINTCROSSOVER_H
 #define GENETICALGORITHM_SINGLEPOINTCROSSOVER_H
 
+#include <random>
+
 #include "GA/Crossover.h"
 #include "GA/Representation/BinaryRepresentation.h"
 
@@ -17,7 +19,7 @@ namespace GA {
     class SinglePointCrossover<BinaryRepresentation<N>> : public Crossover<BinaryRepresentation<N>> {
 
     public:
-        SinglePointCrossover() = default;
+        SinglePointCrossover();
         SinglePointCrossover(const SinglePointCrossover&) = default;
         SinglePointCrossover(SinglePointCrossover&&) = default;
         virtual ~SinglePointCrossover() = default;
@@ -27,6 +29,9 @@ namespace GA {
 
         BinaryRepresentation<N>
         operator()(const BinaryRepresentation<N> &individual1, const BinaryRepresentation<N> &individual2) override;
+
+    private:
+        std::default_random_engine rnd;
 
     };
 

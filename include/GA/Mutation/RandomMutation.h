@@ -1,6 +1,8 @@
 #ifndef GENETICALGORITHM_RANDOMMUTATION_H
 #define GENETICALGORITHM_RANDOMMUTATION_H
 
+#include <random>
+
 #include "GA/Mutation.h"
 #include "GA/Representation/BinaryRepresentation.h"
 
@@ -37,6 +39,8 @@ namespace GA {
         Individual operator()(const Individual &individual) override;
 
     protected:
+        std::default_random_engine rnd;
+
         double probability;
 
     };

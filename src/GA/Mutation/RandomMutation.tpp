@@ -1,11 +1,12 @@
 #include <cassert>
-#include <cstdlib> // rand
 
 #include "GA/Mutation/RandomMutation.h"
 
 template<size_t N>
 GA::RandomMutation<GA::BinaryRepresentation<N>>::RandomMutation(double probability) {
     this->setProbability(probability);
+    std::random_device rndDevice;
+    this->rnd.seed(rndDevice());
 }
 
 template<size_t N>
@@ -23,8 +24,9 @@ template<size_t N>
 typename GA::RandomMutation<GA::BinaryRepresentation<N>>::Individual
 GA::RandomMutation<GA::BinaryRepresentation<N>>::operator()(
         GA::RandomMutation<GA::BinaryRepresentation<N>>::Individual &individual) {
+    std::uniform_real_distribution<double> probaRand(0., 1.);
     for (int n = 0; n < individual.size(); ++n) {
-        if (rand() < probability * RAND_MAX) {
+        if (probaRand(rnd) < probability) {
             individual.flip(n);
         }
     }

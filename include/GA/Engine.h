@@ -2,6 +2,7 @@
 #define GENETICALGORITHM_ENGINE_H
 
 #include <type_traits> // is_base_of
+#include <random>
 
 #include <map>
 
@@ -214,6 +215,8 @@ namespace GA {
         double getStandardDeviation(size_t count) const;
 
     private:
+        std::default_random_engine rnd;
+
         Objective<Individual> &objective; /**< Bounded objective functor */
         Crossover<Individual> &crossover; /**< Bounded crossover functor */
         Mutation<Individual> &mutation; /**< Bounded mutation functor */

@@ -1,7 +1,8 @@
 #include <algorithm> // swap
 #include <cassert>
-#include <cstdlib> // size_t, rand, RAND_MAX
+#include <cstdlib> // size_t
 #include <cmath> // sqrt, INFINITY
+#include <random>
 
 #include <bitset>
 #include <vector>
@@ -11,24 +12,30 @@
 template<size_t NF>
 FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomInstance(size_t numberCustomer) {
     Instance out(numberCustomer);
+    std::random_device rndDevice;
+    std::default_random_engine rnd(rndDevice());
+    std::uniform_real_distribution<double> distrib(0., 1.);
 //    out.distances = new double *[numberFacility];
     // iF for index of the facility
     for (size_t iF = 0; iF < numberFacility; ++iF) {
         out.distances[iF] = new double[numberCustomer];
         // iC for index of customer
         for (size_t iC = 0; iC < numberCustomer; ++iC) {
-            out.distances[iF][iC] = (double) rand() / RAND_MAX;
+            out.distances[iF][iC] = distrib(rnd);
         }
     }
 //    out.openingCost = new double[numberFacility];
     for (size_t iF = 0; iF < numberFacility; ++iF) {
-        out.openingCost[iF] = (double) rand() / RAND_MAX;
+        out.openingCost[iF] = distrib(rnd);
     }
     return out;
 }
 
 template<size_t NF>
 FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomMetricInstance(size_t numberCustomer) {
+    std::random_device rndDevice;
+    std::default_random_engine rnd(rndDevice());
+    std::uniform_real_distribution<double> distrib(0., 1.);
     /*
      * We associate a 2D position to each customer and facility, and then convert to distances
      */
@@ -37,11 +44,11 @@ FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomMetricInsta
     using Coordinate = std::pair<double, double>;
     std::vector<Coordinate > customerPosition;
     for (size_t n = 0; n < numberCustomer; ++n) {
-        customerPosition.push_back(Coordinate((double) rand() / RAND_MAX, (double) rand() / RAND_MAX));
+        customerPosition.push_back(Coordinate(distrib(rnd), distrib(rnd)));
     }
     std::vector<std::pair<double, double>> facilityPosition;
     for (size_t n = 0; n < numberFacility; ++n) {
-        facilityPosition.push_back(Coordinate((double) rand() / RAND_MAX, (double) rand() / RAND_MAX));
+        facilityPosition.push_back(Coordinate(distrib(rnd), distrib(rnd)));
     }
 
     double x, y;
@@ -57,7 +64,7 @@ FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomMetricInsta
     }
 
     for (size_t iF = 0; iF < numberFacility; ++iF) {
-        out.openingCost[iF] = (double) rand() / RAND_MAX;
+        out.openingCost[iF] = distrib(rnd);
     }
     return out;
 }

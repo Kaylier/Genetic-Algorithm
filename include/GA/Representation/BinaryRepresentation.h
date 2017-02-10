@@ -2,6 +2,8 @@
 #define GENETICALGORITHM_BINARYREPRESENTATION_H
 
 #include <bitset>
+#include <random>
+
 #include "GA/Representation.h"
 
 namespace GA {
@@ -14,7 +16,7 @@ namespace GA {
     class BinaryRepresentation : public Representation, public std::bitset<N> {
 
     public:
-        BinaryRepresentation() = default;
+        BinaryRepresentation();
         BinaryRepresentation(const BinaryRepresentation&) = default;
         BinaryRepresentation(BinaryRepresentation&&) = default;
         BinaryRepresentation(unsigned long val);
@@ -24,6 +26,9 @@ namespace GA {
         BinaryRepresentation &operator=(BinaryRepresentation&&) = default;
 
         void randomize() override;
+
+    private:
+        std::default_random_engine rnd;
 
     };
 

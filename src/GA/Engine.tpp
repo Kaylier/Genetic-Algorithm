@@ -1,5 +1,4 @@
 #include <cassert>
-#include <cstdlib> // rand
 #include <cmath> // sqrt
 
 #include "GA/Engine.h"
@@ -14,7 +13,10 @@ GA::Engine<Individual>::Engine(Objective<Individual> &objective,
         mutation(mutation),
         selection(selection),
         populationSize(1),
-        population() {}
+        population() {
+    std::random_device rndDevice;
+    this->rnd.seed(rndDevice());
+}
 
 template<class Individual>
 GA::Objective<Individual> &GA::Engine<Individual>::getObjective() const {
@@ -92,6 +94,7 @@ double GA::Engine<Individual>::step() {
 template<class Individual>
 double GA::Engine<Individual>::step(unsigned int numberStep) {
     typename Population::iterator it1, it2;
+    std::uniform_int_distribution<size_t> distrib;
     Individual individual;
 
     for (unsigned int i = numberStep; i != 0; --i) {
@@ -101,8 +104,9 @@ double GA::Engine<Individual>::step(unsigned int numberStep) {
         while (population.size() < populationSize) {
             it1 = population.begin();
             it2 = population.begin();
-            std::advance(it1, rand() % population.size());
-            std::advance(it2, rand() % population.size());
+            distrib.param(std::uniform_int_distribution<size_t>::param_type(0, population.size()-1));
+            std::advance(it1, distrib(rnd));
+            std::advance(it2, distrib(rnd));
 
             individual = std::move(mutation(crossover(it1->second, it2->second)));
 
