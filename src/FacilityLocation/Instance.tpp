@@ -10,12 +10,11 @@
 #include "FacilityLocation/Instance.h"
 
 template<size_t NF>
-FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomInstance(size_t numberCustomer) {
-    Instance out(numberCustomer);
-    std::random_device rndDevice;
-    std::default_random_engine rnd(rndDevice());
+FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomInstance(size_t numberCustomer, unsigned int seed) {
+    std::default_random_engine rnd(seed);
     std::uniform_real_distribution<double> distrib(0., 1.);
-//    out.distances = new double *[numberFacility];
+
+    Instance out(numberCustomer);
     // iF for index of the facility
     for (size_t iF = 0; iF < numberFacility; ++iF) {
         out.distances[iF] = new double[numberCustomer];
@@ -24,7 +23,6 @@ FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomInstance(si
             out.distances[iF][iC] = distrib(rnd);
         }
     }
-//    out.openingCost = new double[numberFacility];
     for (size_t iF = 0; iF < numberFacility; ++iF) {
         out.openingCost[iF] = distrib(rnd);
     }
@@ -32,9 +30,9 @@ FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomInstance(si
 }
 
 template<size_t NF>
-FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomMetricInstance(size_t numberCustomer) {
-    std::random_device rndDevice;
-    std::default_random_engine rnd(rndDevice());
+FacilityLocation::Instance<NF>
+FacilityLocation::Instance<NF>::randomMetricInstance(size_t numberCustomer, unsigned int seed) {
+    std::default_random_engine rnd(seed);
     std::uniform_real_distribution<double> distrib(0., 1.);
     /*
      * We associate a 2D position to each customer and facility, and then convert to distances
@@ -42,7 +40,7 @@ FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomMetricInsta
     Instance out(numberCustomer);
 
     using Coordinate = std::pair<double, double>;
-    std::vector<Coordinate > customerPosition;
+    std::vector<Coordinate> customerPosition;
     for (size_t n = 0; n < numberCustomer; ++n) {
         customerPosition.push_back(Coordinate(distrib(rnd), distrib(rnd)));
     }
@@ -59,7 +57,7 @@ FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomMetricInsta
         for (size_t iC = 0; iC < numberCustomer; ++iC) {
             x = facilityPosition[iC].first - customerPosition[iF].first;
             y = facilityPosition[iC].second - customerPosition[iF].second;
-            out.distances[iF][iC] = sqrt(x*x + y*y);
+            out.distances[iF][iC] = sqrt(x * x + y * y);
         }
     }
 

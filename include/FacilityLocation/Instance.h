@@ -3,6 +3,7 @@
 
 #include <algorithm> // swap
 #include <cstdlib> // size_t
+#include <random>
 
 namespace FacilityLocation {
 
@@ -20,8 +21,8 @@ namespace FacilityLocation {
         constexpr static size_t numberFacility = NF;
         const size_t numberCustomer;
 
-        static Instance randomInstance(size_t numberCustomer);
-        static Instance randomMetricInstance(size_t numberCustomer);
+        static Instance randomInstance(size_t numberCustomer, unsigned int seed = std::random_device()());
+        static Instance randomMetricInstance(size_t numberCustomer, unsigned int seed = std::random_device()());
         static Instance load(std::string filename);
 
         Instance() = delete;
