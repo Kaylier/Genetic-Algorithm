@@ -22,6 +22,7 @@ namespace FacilityLocation {
 
         static Instance randomInstance(size_t numberCustomer);
         static Instance randomMetricInstance(size_t numberCustomer);
+        static Instance load(std::string filename);
 
         Instance() = delete;
         Instance(const Instance<NF> &instance);
@@ -38,6 +39,8 @@ namespace FacilityLocation {
         double distance(size_t facility, size_t customer) const;
         double cost(size_t facility) const;
 
+        void save(std::string filename) const;
+
     private:
         Instance(size_t numberCustomer);
 
@@ -49,8 +52,8 @@ namespace FacilityLocation {
     template<size_t NF>
     void swap(Instance<NF> &first, Instance<NF> &second);
 
-    template class Instance<4>;
-
 }
+
+#include "FacilityLocation/Instance.tpp"
 
 #endif //FACILITYLOCATION_INSTANCE_H

@@ -14,8 +14,8 @@ namespace FacilityLocation {
 
     };
 
-    template class Solver<4>;
-
 }
+
+#include "FacilityLocation/Solver.tpp"
 
 #endif //GENETICALGORITHM_SOLVER_H

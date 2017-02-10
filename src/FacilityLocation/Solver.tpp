@@ -6,9 +6,9 @@
 template<size_t NF>
 double FacilityLocation::Solver<NF>::bruteForce(FacilityLocation::Instance<NF> &instance,
                                             FacilityLocation::Objective<GA::BinaryRepresentation<NF>> &objective) {
-    if (instance.getNumberFacility() > sizeof(int)) {
+    if (instance.getNumberFacility() > sizeof(int)*8) {
         std::cerr << "[ERROR] Bruteforce asked for a too big instance (" << instance.getNumberFacility() << ")"
-                  << ". The maximal size authorized is " << sizeof(int) << std::endl;
+                  << ". The maximal size authorized is " << sizeof(int)*8 << std::endl;
     }
     double bestScore = INFINITY;
     for (unsigned int n = 1; n <= (int)pow(2, instance.numberFacility); ++n) {

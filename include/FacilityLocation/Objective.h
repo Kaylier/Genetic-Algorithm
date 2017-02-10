@@ -30,8 +30,8 @@ namespace FacilityLocation {
 
     };
 
-    template class Objective<GA::BinaryRepresentation<4>>;
-
 }
+
+#include "FacilityLocation/Objective.tpp"
 
 #endif //FACILITYLOCATION_OBJECTIVE_H

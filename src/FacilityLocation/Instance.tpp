@@ -70,6 +70,12 @@ FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomMetricInsta
 }
 
 template<size_t NF>
+FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::load(std::string filename) {
+    // TODO: load from file
+    return randomMetricInstance(16);
+}
+
+template<size_t NF>
 FacilityLocation::Instance<NF>::Instance(size_t numberCustomer) : numberCustomer(numberCustomer) {}
 
 template<size_t NF>
@@ -144,5 +150,10 @@ void FacilityLocation::swap(FacilityLocation::Instance<NF> &first, FacilityLocat
 //    swap(first.numberCustomer, second.numberCustomer);
     swap(first.distances, second.distances);
     swap(first.openingCost, second.openingCost);
+}
+
+template<size_t NF>
+void FacilityLocation::Instance<NF>::save(std::string filename) const {
+    // TODO: save to file
 }
 
