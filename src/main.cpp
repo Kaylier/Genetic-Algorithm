@@ -5,6 +5,7 @@
 #include <FacilityLocation/Solver.h>
 #include "GA/Engine.h"
 #include <GA/Crossover/MultiPointCrossover.h>
+#include <GA/Selection/ProbabilistSelection.h>
 #include "GA/Mutation/RandomMutation.h"
 #include "GA/Selection/ElitismSelection.h"
 
@@ -19,9 +20,9 @@ int main(int argc, char **argv) {
     FacilityLocation::Instance<NF> instance = FacilityLocation::Instance<NF>::randomMetricInstance(NC);
 
     FacilityLocation::Objective<Individual> objective(instance);
-    GA::MultiPointCrossover<Individual> crossover(3);
+    GA::MultiPointCrossover<Individual> crossover(1);
     GA::RandomMutation<Individual> mutation(1./NF);
-    GA::ElitismSelection<Individual> selection(0.5);
+    GA::ProbabilistSelection<Individual> selection;
 
     GA::Engine<Individual> ga(objective, crossover, mutation, selection);
 
