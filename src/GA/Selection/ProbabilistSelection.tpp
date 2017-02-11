@@ -1,8 +1,6 @@
 #include <cassert>
 #include <random>
 
-#include "GA/Selection/ProbabilistSelection.h"
-
 template<class Individual>
 typename GA::ProbabilistSelection<Individual>::Population GA::ProbabilistSelection<Individual>::operator()
         (GA::ProbabilistSelection<Individual>::Population &population) {

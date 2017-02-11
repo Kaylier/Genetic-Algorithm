@@ -7,8 +7,6 @@
 #include <bitset>
 #include <vector>
 
-#include "FacilityLocation/Instance.h"
-
 template<size_t NF>
 FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomInstance(size_t numberCustomer, unsigned int seed) {
     std::default_random_engine rnd(seed);

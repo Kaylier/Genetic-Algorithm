@@ -1,7 +1,5 @@
 #include <cmath> // INFINITY
 
-#include "FacilityLocation/Objective.h"
-
 template<size_t N>
 FacilityLocation::Objective<GA::BinaryRepresentation<N>>::Objective(const FacilityLocation::Instance<N> &instance) :
         instance(instance) {

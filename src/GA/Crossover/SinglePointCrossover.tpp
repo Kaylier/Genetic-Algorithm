@@ -1,5 +1,3 @@
-#include "GA/Crossover/SinglePointCrossover.h"
-
 template<size_t N>
 GA::SinglePointCrossover<GA::BinaryRepresentation<N>>::SinglePointCrossover() {
     std::random_device rndDevice;

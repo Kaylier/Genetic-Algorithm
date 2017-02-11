@@ -1,8 +1,6 @@
 #include <cassert>
 #include <cmath> // sqrt
 
-#include "GA/Engine.h"
-
 template<class Individual>
 GA::Engine<Individual>::Engine(Objective<Individual> &objective,
                                Crossover<Individual> &crossover,

@@ -1,7 +1,5 @@
 #include <cassert>
 
-#include "GA/Selection/ElitismSelection.h"
-
 template<class Individual>
 GA::ElitismSelection<Individual>::ElitismSelection(double proportionSurvival) {
     assert(0. < proportionSurvival && proportionSurvival < 1.);

@@ -1,4 +1,5 @@
-#include "GA/Representation/BinaryRepresentation.h"
+#include <cassert>
+#include <random>
 
 template <size_t N>
 GA::BinaryRepresentation<N>::BinaryRepresentation() {

@@ -1,8 +1,6 @@
 #include <cmath> // INFINITY
 #include <iostream> // cerr, endl
 
-#include "FacilityLocation/Solver.h"
-
 template<size_t NF>
 double FacilityLocation::Solver<NF>::bruteForce(FacilityLocation::Instance<NF> &instance,
                                             FacilityLocation::Objective<GA::BinaryRepresentation<NF>> &objective) {

@@ -1,8 +1,6 @@
 #include <queue>
 #include <algorithm>
 
-#include "GA/Crossover/MultiPointCrossover.h"
-
 template<size_t N>
 GA::MultiPointCrossover<GA::BinaryRepresentation<N>>::MultiPointCrossover(const unsigned int numberPoint) :
     numberPoint(numberPoint) {

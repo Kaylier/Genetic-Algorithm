@@ -1,7 +1,5 @@
 #include <cassert>
 
-#include "GA/Mutation/RandomMutation.h"
-
 template<size_t N>
 GA::RandomMutation<GA::BinaryRepresentation<N>>::RandomMutation(double probability) {
     this->setProbability(probability);
