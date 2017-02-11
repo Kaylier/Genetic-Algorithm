@@ -6,25 +6,28 @@
 #include "GA/Engine.h"
 #include <GA/Crossover/MultiPointCrossover.h>
 #include <GA/Selection/ProbabilistSelection.h>
+#include <GA/Objective/DeadBitInsertion.h>
 #include "GA/Mutation/RandomMutation.h"
 #include "GA/Selection/ElitismSelection.h"
 
 #define NF 16 // Number of facilities
 #define NC 16 // Number of customers
 
-using Individual = GA::BinaryRepresentation<NF>;
+using realIndividual = GA::BinaryRepresentation<NF>;
+using redundantIndividual = GA::BinaryRepresentation<NF + NF/2>;
 
 int main(int argc, char **argv) {
     srand((unsigned int) time(nullptr));
     
     FacilityLocation::Instance<NF> instance = FacilityLocation::Instance<NF>::randomMetricInstance(NC);
 
-    FacilityLocation::Objective<Individual> objective(instance);
-    GA::MultiPointCrossover<Individual> crossover(1);
-    GA::RandomMutation<Individual> mutation(1./NF);
-    GA::ProbabilistSelection<Individual> selection;
+    FacilityLocation::Objective<realIndividual> realObjective(instance);
+    GA::DeadBitInsertion<realIndividual, redundantIndividual > objective(realObjective, NF/2);
+    GA::MultiPointCrossover<redundantIndividual> crossover(1);
+    GA::RandomMutation<redundantIndividual> mutation(1./NF);
+    GA::ProbabilistSelection<redundantIndividual > selection;
 
-    GA::Engine<Individual> ga(objective, crossover, mutation, selection);
+    GA::Engine<redundantIndividual > ga(objective, crossover, mutation, selection);
 
     std::cout << "### Distances" << std::endl;
     for (size_t i = 0; i < NF; ++i) {
@@ -40,7 +43,7 @@ int main(int argc, char **argv) {
     std::cout << std::endl;
 
     std::cout << "### Best score" << std::endl;
-    std::cout << FacilityLocation::Solver<NF>::bruteForce(instance, objective) << std::endl;
+    std::cout << FacilityLocation::Solver<NF>::bruteForce(instance, realObjective) << std::endl;
 
     ga.initialize(10);
     for (int i = 0; i < 10; i++) {
