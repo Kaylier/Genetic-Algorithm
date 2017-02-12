@@ -43,7 +43,8 @@ int main(int argc, char **argv) {
     std::cout << std::endl;
 
     std::cout << "### Best score" << std::endl;
-    std::cout << FacilityLocation::Solver<NF>::bruteForce(instance, realObjective) << std::endl;
+    std::cout << "Brute force: " << FacilityLocation::Solver<NF>::bruteForce(instance, realObjective) << std::endl;
+    std::cout << "Greedy: " << FacilityLocation::Solver<NF>::greedy(instance) << std::endl;
 
     ga.initialize(10);
     for (int i = 0; i < 10; i++) {

@@ -12,6 +12,8 @@ namespace FacilityLocation {
         static double bruteForce(Instance<NF> &instance, Objective<GA::BinaryRepresentation<NF>> &objective);
         static double greedy(Instance<NF> &instance);
 
+    private:
+        static bool containsFalse(const bool *array, size_t size);
     };
 
 }
