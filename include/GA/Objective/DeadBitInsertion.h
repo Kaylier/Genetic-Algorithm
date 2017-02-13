@@ -12,7 +12,7 @@ namespace GA {
 
     template<size_t N, size_t M>
     class DeadBitInsertion<GA::BinaryRepresentation<N>, GA::BinaryRepresentation<M>> : public GA::Objective<GA::BinaryRepresentation<M>> {
-        static_assert(M > N, "Incompatible size of binary representation");
+        static_assert(M >= N, "Incompatible size of binary representation");
 
     public:
         DeadBitInsertion() = delete;
