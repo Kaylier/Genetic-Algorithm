@@ -3,6 +3,7 @@
 
 #include <algorithm> // swap
 #include <cstdlib> // size_t
+#include <fstream>
 #include <random>
 
 namespace FacilityLocation {
@@ -30,7 +31,7 @@ namespace FacilityLocation {
         Instance(Instance &&instance);
         ~Instance();
 
-        Instance &operator=(Instance<NF> instance);
+        Instance &operator=(const Instance<NF> &instance);
         Instance &operator=(Instance &&instance);
         template<size_t NF2>
         friend void swap(Instance<NF2> &first, Instance<NF2> &second);

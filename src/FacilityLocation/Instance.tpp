@@ -6,9 +6,11 @@
 
 #include <bitset>
 #include <vector>
+#include <FacilityLocation/Instance.h>
 
 template<size_t NF>
-FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::randomInstance(size_t numberCustomer, unsigned int seed) {
+FacilityLocation::Instance<NF>
+FacilityLocation::Instance<NF>::randomInstance(size_t numberCustomer, unsigned int seed) {
     std::default_random_engine rnd(seed);
     std::uniform_real_distribution<double> distrib(0., 1.);
 
@@ -67,8 +69,44 @@ FacilityLocation::Instance<NF>::randomMetricInstance(size_t numberCustomer, unsi
 
 template<size_t NF>
 FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::load(std::string filename) {
-    // TODO: load from file
-    return randomMetricInstance(16);
+    // TODO: safe loading, no check are done
+    std::ifstream file(filename);
+    std::string str;
+    size_t numberFacility, numberCustomer;
+    double input;
+
+    file >> str;
+    assert(str == "Size:");
+    file >> numberFacility;
+    assert(numberFacility == NF);
+    file >> numberCustomer;
+
+    FacilityLocation::Instance<NF> instance(numberCustomer);
+    for (size_t iF = 0; iF < numberFacility; ++iF) {
+        instance.distances[iF] = new double[numberCustomer];
+    }
+
+    file >> str;
+    assert(str == "Distances:");
+    for (size_t i = 0; i < numberFacility; ++i) {
+        for (size_t j = 0; j < numberCustomer; ++j) {
+            file >> input;
+            instance.distances[i][j] = input;
+        }
+    }
+
+
+    file >> str;
+    assert(str == "Opening");
+    file >> str;
+    assert(str == "costs:");
+    for (size_t i = 0; i < numberFacility; ++i) {
+        file >> input;
+        instance.openingCost[i] = input;
+    }
+
+    file.close();
+    return instance;
 }
 
 template<size_t NF>
@@ -104,8 +142,10 @@ FacilityLocation::Instance<NF>::~Instance() {
 }
 
 template<size_t NF>
-FacilityLocation::Instance<NF> &FacilityLocation::Instance<NF>::operator=(FacilityLocation::Instance<NF> instance) {
-    swap(*this, instance);
+FacilityLocation::Instance<NF> &
+FacilityLocation::Instance<NF>::operator=(const FacilityLocation::Instance<NF> &instance) {
+    Instance &copy = FacilityLocation::Instance<NF>(instance);
+    swap(*this, copy);
     return *this;
 }
 
@@ -150,6 +190,20 @@ void FacilityLocation::swap(FacilityLocation::Instance<NF> &first, FacilityLocat
 
 template<size_t NF>
 void FacilityLocation::Instance<NF>::save(std::string filename) const {
-    // TODO: save to file
+    std::ofstream file(filename);
+    file << "Size: " << numberFacility << "\t" << numberCustomer << std::endl;
+    file << "Distances: " << std::endl;
+    for (size_t i = 0; i < numberFacility; ++i) {
+        for (size_t j = 0; j < numberCustomer; ++j) {
+            file << distance(i, j) << "\t";
+        }
+        file << std::endl;
+    }
+    file << "Opening costs: " << std::endl;
+    for (size_t i = 0; i < numberFacility; ++i) {
+        file << cost(i) << "\t";
+    }
+    file << std::endl;
+    file.close();
 }
 
