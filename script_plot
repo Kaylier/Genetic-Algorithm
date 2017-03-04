@@ -1,0 +1,12 @@
+#! /bin/gnuplot
+
+first = "output/plot0/stats"
+second = "output/plot1/stats"
+
+plot first using 1:3 with lines linetype rgb "#000000FF" title ''
+replot first using 1:2:4 with filledcurves closed linetype rgb "#880000FF" title ''
+
+replot second using 1:3 with lines linetype rgb "#00ff0000" title ''
+replot second using 1:2:4 with filledcurves closed linetype rgb "#88FF0000" title ''
+
+pause -1
