@@ -80,7 +80,7 @@ int main() {
         GA::MultiPointCrossover<Individual> crossover(1);
         GA::RandomMutation<Individual> mutation(1. / NF);
         GA::ProbabilistSelection<Individual> selection;
-        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "plot0_", 32, realObjective, crossover, mutation, selection);
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/plot0/", 32, realObjective, crossover, mutation, selection);
     }
     {
         using redundantIndividual = GA::BinaryRepresentation<NF*3>;
@@ -88,7 +88,7 @@ int main() {
         GA::MultiPointCrossover<redundantIndividual> crossover(1);
         GA::RandomMutation<redundantIndividual> mutation(1. / NF);
         GA::ProbabilistSelection<redundantIndividual> selection;
-        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "plot1_", 32, objective, crossover, mutation, selection);
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/plot1/", 32, objective, crossover, mutation, selection);
     }
     return 0;
 }
