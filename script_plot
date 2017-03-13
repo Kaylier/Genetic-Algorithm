@@ -1,12 +1,85 @@
 #! /bin/gnuplot
 
-first = "output/plot0/stats"
-second = "output/plot1/stats"
+filename0 = "output/bench_population_size/2/stats"
+plot filename0 using 1:3 with lines linetype rgb "#000000ff" title ''
+replot filename0 using 1:2:4 with filledcurves closed linetype rgb "#880000ff" title "2"
 
-plot first using 1:3 with lines linetype rgb "#000000FF" title ''
-replot first using 1:2:4 with filledcurves closed linetype rgb "#880000FF" title ''
+filename1 = "output/bench_population_size/3/stats"
+replot filename1 using 1:3 with lines linetype rgb "#0000ff00" title ''
+replot filename1 using 1:2:4 with filledcurves closed linetype rgb "#8800ff00" title "3"
 
-replot second using 1:3 with lines linetype rgb "#00ff0000" title ''
-replot second using 1:2:4 with filledcurves closed linetype rgb "#88FF0000" title ''
+filename2 = "output/bench_population_size/4/stats"
+replot filename2 using 1:3 with lines linetype rgb "#00ff0000" title ''
+replot filename2 using 1:2:4 with filledcurves closed linetype rgb "#88ff0000" title "4"
+
+#pause -1
+
+filename0 = "output/test_mix_information_1.0/1/stats"
+plot filename0 using 1:3 with lines linetype rgb "#000000ff" title ''
+replot filename0 using 1:2:4 with filledcurves closed linetype rgb "#880000ff" title "1"
+
+filename1 = "output/test_mix_information_1.0/127/stats"
+replot filename1 using 1:3 with lines linetype rgb "#0000ff00" title ''
+replot filename1 using 1:2:4 with filledcurves closed linetype rgb "#8800ff00" title "127"
+
+filename2 = "output/test_mix_information_1.0/64/stats"
+replot filename2 using 1:3 with lines linetype rgb "#00ff0000" title ''
+replot filename2 using 1:2:4 with filledcurves closed linetype rgb "#88ff0000" title "64"
+
+#pause -1
+
+filename0 = "output/test_mix_information_1.5/65/stats"
+plot filename0 using 1:3 with lines linetype rgb "#000000ff" title ''
+replot filename0 using 1:2:4 with filledcurves closed linetype rgb "#880000ff" title "65"
+
+filename1 = "output/test_mix_information_1.5/128/stats"
+replot filename1 using 1:3 with lines linetype rgb "#0000ff00" title ''
+replot filename1 using 1:2:4 with filledcurves closed linetype rgb "#8800ff00" title "128"
+
+filename2 = "output/test_mix_information_1.5/191/stats"
+replot filename2 using 1:3 with lines linetype rgb "#00ff0000" title ''
+replot filename2 using 1:2:4 with filledcurves closed linetype rgb "#88ff0000" title "191"
+
+#pause -1
+
+filename0 = "output/test_mix_information_2.0/129/stats"
+plot filename0 using 1:3 with lines linetype rgb "#000000ff" title ''
+replot filename0 using 1:2:4 with filledcurves closed linetype rgb "#880000ff" title "129"
+
+filename1 = "output/test_mix_information_2.0/192/stats"
+replot filename1 using 1:3 with lines linetype rgb "#0000ff00" title ''
+replot filename1 using 1:2:4 with filledcurves closed linetype rgb "#8800ff00" title "192"
+
+filename2 = "output/test_mix_information_2.0/255/stats"
+replot filename2 using 1:3 with lines linetype rgb "#00ff0000" title ''
+replot filename2 using 1:2:4 with filledcurves closed linetype rgb "#88ff0000" title "255"
+
+#pause -1
+
+filename0 = "output/test_mix_information_3.0/257/stats"
+plot filename0 using 1:3 with lines linetype rgb "#000000ff" title ''
+replot filename0 using 1:2:4 with filledcurves closed linetype rgb "#880000ff" title "257"
+
+filename1 = "output/test_mix_information_3.0/320/stats"
+replot filename1 using 1:3 with lines linetype rgb "#0000ff00" title ''
+replot filename1 using 1:2:4 with filledcurves closed linetype rgb "#8800ff00" title "320"
+
+filename2 = "output/test_mix_information_3.0/383/stats"
+replot filename2 using 1:3 with lines linetype rgb "#00ff0000" title ''
+replot filename2 using 1:2:4 with filledcurves closed linetype rgb "#88ff0000" title "383"
+
+#pause -1
+
+filename0 = "output/test_mix_information_1.0/127/stats"
+plot filename0 using 1:3 with lines linetype rgb "#000000ff" title ''
+replot filename0 using 1:2:4 with filledcurves closed linetype rgb "#880000ff" title "1.0"
+
+filename1 = "output/test_mix_information_1.5/191/stats"
+replot filename1 using 1:3 with lines linetype rgb "#0000ff00" title ''
+replot filename1 using 1:2:4 with filledcurves closed linetype rgb "#8800ff00" title "1.5"
+
+filename2 = "output/test_mix_information_2.0/255/stats"
+replot filename2 using 1:3 with lines linetype rgb "#00ff0000" title ''
+replot filename2 using 1:2:4 with filledcurves closed linetype rgb "#88ff0000" title "2.0"
 
 pause -1

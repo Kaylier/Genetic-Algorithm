@@ -9,14 +9,15 @@
 #include "GA/Selection/ProbabilistSelection.h"
 #include "GA/Objective/DeadBitInsertion.h"
 #include "GA/Objective/DuplicateBits.h"
+#include "GA/Objective/MixInformation.h"
 #include "GA/Mutation/RandomMutation.h"
 #include "GA/Selection/ElitismSelection.h"
 
 #define NF 128 // Number of facilities
 #define NC 128 // Number of customers
 #define SEED 1 // Seed of the generation
-#define TIME_MAX_EACH 1. // Time of each execution in seconds
-#define TIME_MAX_TOTAL 100. // Time to spend with each set of parameters in seconds
+#define TIME_MAX_EACH 0.2 // Time of each execution in seconds
+#define TIME_MAX_TOTAL 20. // Time to spend with each set of parameters in seconds
 
 using Individual = GA::BinaryRepresentation<NF>;
 
@@ -32,15 +33,15 @@ void generate(double time_max_each, double time_max_total, std::string path, siz
     constexpr unsigned int STEPS = 10;
 
     GA::Engine<Individual> ga(objective, crossover, mutation, selection);
-    std::cout << "### Execution (" << path << ")" << std::endl;
+    std::cout << "### Execution of " << path << std::endl;
     std::ofstream file;
 
     unsigned int number_max = time_max_total / time_max_each;
     for (unsigned int number = 0; number < number_max; number++) {
         std::cout << (100 * number / number_max) << "% (" << number << "/" << number_max << ")\r" << std::flush;
-        file.open(path + std::to_string(number));
+        file.open(path + "/" + std::to_string(number));
         if (!file.is_open()) {
-            std::cerr << "Can't open file " + path + std::to_string(number) << std::endl;
+            std::cerr << "Can't open file " + path + "/" + std::to_string(number) << std::endl;
         } else {
 
             auto start = Clock::now();
@@ -73,23 +74,127 @@ int main() {
     if (NF <= 16) {
         std::cout << "Best score: " << FacilityLocation::Solver<NF>::bruteForce(instance, realObjective) << std::endl;
     } else {
-        std::cout << "Best score estimated (< 1.61*opt): " << FacilityLocation::Solver<NF>::greedy(instance) << std::endl;
+        auto start = Clock::now();
+        std::cout << "Best score estimated (< 1.61*opt): " << FacilityLocation::Solver<NF>::greedy(instance);
+        std::cout << " (computed in " << Duration(Clock::now() - start).count() << "s)" << std::endl;
     }
 
-    {
+    // Benchmark of the crossover number of cut
+/*
+    for (size_t n: {1, 2, 3, 4}) {
+        GA::MultiPointCrossover<Individual> crossover(n);
+        GA::RandomMutation<Individual> mutation(1. / NF);
+        GA::ProbabilistSelection<Individual> selection;
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/bench_crossover_point/"+std::to_string(n), 32,
+                 realObjective, crossover, mutation, selection);
+    }
+*/
+
+    // Benchmark of the mutation rate
+/*
+    for (double x: {0., 0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0}) {
+        GA::MultiPointCrossover<Individual> crossover(1);
+        GA::RandomMutation<Individual> mutation(x / NF);
+        GA::ProbabilistSelection<Individual> selection;
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/bench_random_mutation/"+std::to_string(x), 32,
+                 realObjective, crossover, mutation, selection);
+    }
+*/
+
+    // Benchmark of the population size
+/*
+    for (size_t n: {1, 2, 3, 4, 8, 16, 32, 64, 128}) {
         GA::MultiPointCrossover<Individual> crossover(1);
         GA::RandomMutation<Individual> mutation(1. / NF);
         GA::ProbabilistSelection<Individual> selection;
-        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/plot0/", 32, realObjective, crossover, mutation, selection);
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/bench_population_size/"+std::to_string(n), n,
+                 realObjective, crossover, mutation, selection);
     }
+*/
+
+    // Test of bit duplication
+/*
     {
-        using redundantIndividual = GA::BinaryRepresentation<NF*3>;
-        GA::DuplicateBits<Individual, redundantIndividual> objective(realObjective, 0);
+        {
+            constexpr size_t N = NF;
+            using redundantIndividual = GA::BinaryRepresentation<N>;
+            GA::DuplicateBits<Individual, redundantIndividual> objective(realObjective, 0);
+            GA::MultiPointCrossover<redundantIndividual> crossover(1);
+            GA::RandomMutation<redundantIndividual> mutation(1. / NF);
+            GA::ProbabilistSelection<redundantIndividual> selection;
+            generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/test_duplicate_bit/" + std::to_string(N), 32, objective,
+                     crossover, mutation, selection);
+        }
+        {
+            constexpr size_t N = NF * 3;
+            using redundantIndividual = GA::BinaryRepresentation<N>;
+            GA::DuplicateBits<Individual, redundantIndividual> objective(realObjective, 0);
+            GA::MultiPointCrossover<redundantIndividual> crossover(1);
+            GA::RandomMutation<redundantIndividual> mutation(1. / NF);
+            GA::ProbabilistSelection<redundantIndividual> selection;
+            generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/test_duplicate_bit/" + std::to_string(N), 32, objective,
+                     crossover, mutation, selection);
+        }
+        {
+            constexpr size_t N = NF * 5;
+            using redundantIndividual = GA::BinaryRepresentation<N>;
+            GA::DuplicateBits<Individual, redundantIndividual> objective(realObjective, 0);
+            GA::MultiPointCrossover<redundantIndividual> crossover(1);
+            GA::RandomMutation<redundantIndividual> mutation(1. / NF);
+            GA::ProbabilistSelection<redundantIndividual> selection;
+            generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/test_duplicate_bit/" + std::to_string(N), 32, objective,
+                     crossover, mutation, selection);
+        }
+    }
+*/
+
+    // Test of information mixing without any redundancy
+/*
+    for (size_t i: {1, 2, 4, 8, NF/2, NF-1}) {
+        using redundantIndividual = GA::BinaryRepresentation<NF>;
+        GA::MixInformation<Individual, redundantIndividual> objective(realObjective, i);
         GA::MultiPointCrossover<redundantIndividual> crossover(1);
         GA::RandomMutation<redundantIndividual> mutation(1. / NF);
         GA::ProbabilistSelection<redundantIndividual> selection;
-        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/plot1/", 32, objective, crossover, mutation, selection);
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/test_mix_information_1.0/"+std::to_string(i), 32, objective, crossover, mutation, selection);
     }
+*/
+
+    // Test of information mixing with a redundancy of 1.5
+/*
+    for (size_t i: {NF/2+1, NF, NF*3/2-1}) {
+        using redundantIndividual = GA::BinaryRepresentation<NF*3/2>;
+        GA::MixInformation<Individual, redundantIndividual> objective(realObjective, i);
+        GA::MultiPointCrossover<redundantIndividual> crossover(1);
+        GA::RandomMutation<redundantIndividual> mutation(1. / NF);
+        GA::ProbabilistSelection<redundantIndividual> selection;
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/test_mix_information_1.5/"+std::to_string(i), 32, objective, crossover, mutation, selection);
+    }
+*/
+
+    // Test of information mixing with a redundancy of 2.0
+/*
+    for (size_t i: {NF+1, NF*3/2, NF*2-1}) {
+        using redundantIndividual = GA::BinaryRepresentation<NF*2>;
+        GA::MixInformation<Individual, redundantIndividual> objective(realObjective, i);
+        GA::MultiPointCrossover<redundantIndividual> crossover(1);
+        GA::RandomMutation<redundantIndividual> mutation(1. / NF);
+        GA::ProbabilistSelection<redundantIndividual> selection;
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/test_mix_information_2.0/"+std::to_string(i), 32, objective, crossover, mutation, selection);
+    }
+*/
+
+    // Test of information mixing with a redundancy of 3.0
+/*
+    for (size_t i: {NF*2+1, NF*5/2, NF*3-1}) {
+        using redundantIndividual = GA::BinaryRepresentation<NF*3>;
+        GA::MixInformation<Individual, redundantIndividual> objective(realObjective, i);
+        GA::MultiPointCrossover<redundantIndividual> crossover(1);
+        GA::RandomMutation<redundantIndividual> mutation(1. / NF);
+        GA::ProbabilistSelection<redundantIndividual> selection;
+        generate(TIME_MAX_EACH, TIME_MAX_TOTAL, "output/test_mix_information_3.0/"+std::to_string(i), 32, objective, crossover, mutation, selection);
+    }
+*/
     return 0;
 }
 

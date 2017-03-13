@@ -12,14 +12,14 @@ namespace GA {
 
     template<size_t N, size_t M>
     class MixInformation<GA::BinaryRepresentation<N>, GA::BinaryRepresentation<M>> : public GA::Objective<GA::BinaryRepresentation<M>> {
-        static_assert(M % N == 0, "Incompatible size of binary representation");
+        static_assert(M >= N, "Incompatible size of binary representation");
 
     public:
         MixInformation() = delete;
 
         MixInformation(const MixInformation&) = default;
         MixInformation(MixInformation&&) = default;
-        MixInformation(GA::Objective<GA::BinaryRepresentation<N>> &initialObjective, size_t offset);
+        MixInformation(GA::Objective<GA::BinaryRepresentation<N>> &initialObjective, size_t range);
 
         ~MixInformation() = default;
 

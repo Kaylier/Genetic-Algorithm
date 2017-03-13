@@ -1,16 +1,13 @@
 #! /bin/python
 from math import sqrt
 from os.path import isfile
-from os import listdir
+from os import listdir, system
 import sys
 
-TIME_MAX = 1.0
-NUMBER_STEP = 20
-TIME_STEP = TIME_MAX / NUMBER_STEP
+TIME_STEP = 0.01 # in seconds
+NUMBER_STEP = 100
 
-for dir in listdir('output'):
-    path = "output/" + dir + "/"
-
+def summarize(path):
     count_file = 1
     while (isfile(path + str(count_file))):
         count_file += 1
@@ -43,6 +40,8 @@ for dir in listdir('output'):
                     # Update timezone
                     current_time_upper_bound += TIME_STEP
                     index += 1
+                    if index >= NUMBER_STEP:
+                        break;
                     # Reinitialize linear regression for the next timezone
                     sum_x = 0
                     sum_y = 0
@@ -76,6 +75,12 @@ for dir in listdir('output'):
 
     file = open(path + "stats", "w")
     for (x, mean, sd) in summary:
-        file.write(str(x) + " " + str(mean-sd) + " " + str(mean) + " " + str(mean+sd) + "\n")
+        file.write(str(x) + " " + str(mean-2*sd) + " " + str(mean) + " " + str(mean+2*sd) + "\n")
 
+
+
+
+for test_dir in listdir('output'):
+    for dir in listdir('output/'+test_dir):
+        summarize("output/" + test_dir + "/" + dir + "/")
 
