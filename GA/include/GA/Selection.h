@@ -32,17 +32,8 @@ namespace GA {
         Selection &operator=(Selection&&) = default;
 
         /**
-         * Perform a selection on a population by modifying the argument.
-         * Some individual may be deleted, but none are added.
-         * The final population is guaranted to have at least one individual.
-         * @param population The initial population
-         * @return The population with at least one individual
-         */
-        virtual Population operator()(Population &population) = 0;
-        /**
          * Perform a selection on a population. The given population is not modified
          * Every individuals in the final population are in the initial population.
-         * The final population is guaranted to have at least one individual.
          * @param population The initial population
          * @return A population with at least one individual
          */

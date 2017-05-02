@@ -23,8 +23,11 @@ namespace FacilityLocation {
         const size_t numberCustomer;
 
         static Instance randomInstance(size_t numberCustomer, unsigned int seed = std::random_device()());
-        static Instance randomMetricInstance(size_t numberCustomer, unsigned int seed = std::random_device()());
+        static Instance randomMetricInstance(size_t numberCustomer, unsigned int seed = std::random_device()(), bool ordered = false);
+        static Instance randomFlawedMetricInstance(size_t numberCustomer, unsigned int seed = std::random_device()(), bool ordered = false);
         static Instance load(std::string filename);
+
+        static std::vector<std::pair<double, double>> orderPositions(std::vector<std::pair<double, double>> input);
 
         Instance() = delete;
         Instance(const Instance<NF> &instance);
@@ -48,7 +51,6 @@ namespace FacilityLocation {
 
         double *distances[NF];
         double openingCost[NF];
-
     };
 
     template<size_t NF>

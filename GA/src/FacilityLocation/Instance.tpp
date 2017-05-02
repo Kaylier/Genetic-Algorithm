@@ -4,9 +4,11 @@
 #include <cmath> // sqrt, INFINITY
 #include <random>
 
+#include <array>
 #include <bitset>
 #include <vector>
 #include <FacilityLocation/Instance.h>
+#include <iostream>
 
 template<size_t NF>
 FacilityLocation::Instance<NF>
@@ -31,7 +33,7 @@ FacilityLocation::Instance<NF>::randomInstance(size_t numberCustomer, unsigned i
 
 template<size_t NF>
 FacilityLocation::Instance<NF>
-FacilityLocation::Instance<NF>::randomMetricInstance(size_t numberCustomer, unsigned int seed) {
+FacilityLocation::Instance<NF>::randomMetricInstance(size_t numberCustomer, unsigned int seed, bool ordered) {
     std::default_random_engine rnd(seed);
     std::uniform_real_distribution<double> distrib(0., 1.);
     /*
@@ -49,6 +51,10 @@ FacilityLocation::Instance<NF>::randomMetricInstance(size_t numberCustomer, unsi
         facilityPosition.push_back(Coordinate(distrib(rnd), distrib(rnd)));
     }
 
+    if (ordered) {
+        facilityPosition = orderPositions(facilityPosition);
+    }
+
     double x, y;
     // iF for index of facility
     for (size_t iF = 0; iF < numberFacility; ++iF) {
@@ -63,6 +69,62 @@ FacilityLocation::Instance<NF>::randomMetricInstance(size_t numberCustomer, unsi
 
     for (size_t iF = 0; iF < numberFacility; ++iF) {
         out.openingCost[iF] = distrib(rnd);
+    }
+    return out;
+}
+
+template<size_t NF>
+FacilityLocation::Instance<NF>
+FacilityLocation::Instance<NF>::randomFlawedMetricInstance(size_t numberCustomer, unsigned int seed, bool ordered) {
+    std::default_random_engine rnd(seed);
+    constexpr int N = 3; // Number of subdivision on each coordinate
+    std::uniform_real_distribution<double> distrib(0., 1./N);
+    std::array<double, N*N> subdivision_prob = {
+            0.16,0.08,0.16,
+            0.08,0.04,0.08,
+            0.16,0.08,0.16};
+/*
+    std::generate(subdivision_prob.begin(), subdivision_prob.end(), [&distrib, &rnd]() {return distrib(rnd);});
+    for (double x: subdivision_prob) {
+        std::cout << x << std::endl;
+    }
+*/
+    std::discrete_distribution<int> subdivision_distrib(subdivision_prob.begin(), subdivision_prob.end());
+    /*
+     * We associate a 2D position to each customer and facility, and then convert to distances
+     */
+    Instance out(numberCustomer);
+
+    using Coordinate = std::pair<double, double>;
+    std::vector<Coordinate> customerPosition;
+    for (size_t n = 0; n < numberCustomer; ++n) {
+        int subdiv = subdivision_distrib(rnd);
+        customerPosition.push_back(Coordinate(subdiv%3+distrib(rnd), subdiv/3+distrib(rnd)));
+    }
+    std::vector<std::pair<double, double>> facilityPosition;
+    for (size_t n = 0; n < numberFacility; ++n) {
+        int subdiv = subdivision_distrib(rnd);
+        facilityPosition.push_back(Coordinate(subdiv%3+distrib(rnd), subdiv/3+distrib(rnd)));
+    }
+
+    if (ordered) {
+        facilityPosition = orderPositions(facilityPosition);
+    }
+
+    double x, y;
+    // iF for index of facility
+    for (size_t iF = 0; iF < numberFacility; ++iF) {
+        out.distances[iF] = new double[numberCustomer];
+        // iC for index of customer
+        for (size_t iC = 0; iC < numberCustomer; ++iC) {
+            x = facilityPosition[iC].first - customerPosition[iF].first;
+            y = facilityPosition[iC].second - customerPosition[iF].second;
+            out.distances[iF][iC] = sqrt(x * x + y * y);
+        }
+    }
+
+    for (size_t iF = 0; iF < numberFacility; ++iF) {
+        out.openingCost[iF] = distrib(rnd)*10. + 10.;
     }
     return out;
 }
@@ -107,6 +169,35 @@ FacilityLocation::Instance<NF> FacilityLocation::Instance<NF>::load(std::string 
 
     file.close();
     return instance;
+}
+
+template<size_t NF>
+std::vector<std::pair<double, double>> FacilityLocation::Instance<NF>::orderPositions(std::vector<std::pair<double, double>> input) {
+    std::vector<std::pair<double, double>> result;
+    /* Get a random element as initialization
+     * Get the nearest element and add it
+     * Repeat until elements are left
+     */
+
+    result.push_back(input.back());
+    input.pop_back();
+
+    while (input.size() > 0) {
+        double minDist = 10.;
+        int argmin = 0;
+        for (size_t i = 0; i < input.size(); i++) {
+            double dx = input[i].first - result.back().first;
+            double dy = input[i].second - result.back().second;
+            if (dx * dx + dy * dy < minDist) {
+                minDist = dx*dx + dy*dy;
+                argmin = i;
+            }
+        }
+        result.push_back(input[argmin]);
+        input.erase(input.begin()+argmin);
+    }
+
+    return result;
 }
 
 template<size_t NF>

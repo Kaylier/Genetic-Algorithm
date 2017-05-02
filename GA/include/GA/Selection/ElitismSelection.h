@@ -32,7 +32,6 @@ namespace GA {
         double getProportionSurvival() const;
         void setProportionSurvival(double proportionSurvival);
 
-        Population operator()(Population &population) override;
         Population operator()(const Population &population) override;
 
     protected:

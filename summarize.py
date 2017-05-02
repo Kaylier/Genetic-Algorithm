@@ -4,11 +4,11 @@ from os.path import isfile
 from os import listdir, system
 import sys
 
-TIME_STEP = 0.01 # in seconds
-NUMBER_STEP = 100
+NUMBER_STEP = 30
+TIME_STEP = 1.0/NUMBER_STEP # in seconds
 
 def summarize(path):
-    count_file = 1
+    count_file = 0
     while (isfile(path + str(count_file))):
         count_file += 1
 
@@ -65,22 +65,83 @@ def summarize(path):
             mean += y
             sd += y*y
             value_count += 1
-        if value_count > 0:
+        if value_count > 1:
             mean /= value_count
-            sd = sqrt(sd/value_count - mean**2)
+            # When the values are very close, the difference can be negative, 
+            if (sd/value_count - mean**2 <= 0.):
+                sd = 0.
+            else:
+                sd = sqrt(sd/value_count - mean**2)
             summary.append((i*TIME_STEP, mean, sd))
 
 
     #print(summary)
 
-    file = open(path + "stats", "w")
-    for (x, mean, sd) in summary:
-        file.write(str(x) + " " + str(mean-2*sd) + " " + str(mean) + " " + str(mean+2*sd) + "\n")
+    if (count_file > 0):
+        file = open(path + "stats", "w")
+        for (x, mean, sd) in summary:
+            file.write(str(x) + " " + str(mean-2*sd) + \
+                                " " + str(mean-sd) + \
+                                " " + str(mean) + \
+                                " " + str(mean+sd) + \
+                                " " + str(mean+2*sd) + \
+                                "\n")
+        file.close()
+
+
+def compare(path_ref, path_test):
+    better_test = 0.
+    worse_test = 0.
+    with open(path_ref + "stats", "r") as fileref, open(path_test + "stats", "r") as filetest:
+        next(fileref)
+        next(filetest)
+        for l1,l2 in zip(fileref, filetest):
+            [x1,a1,b1,m1,c1,d1] = [float(c) for c in l1.split()]
+            [x2,a2,b2,m2,c2,d2] = [float(c) for c in l2.split()]
+            if (a1 > m2):
+                better_test = better_test + a1 - m2
+            if (a2 > m1):
+                worse_test = worse_test + a2 - m1
+    print(path_test + ":" + str(better_test) + " " + str(worse_test))
+    if (better_test > 15. and worse_test < 1.):
+        return 1
+    if (worse_test > 15. and better_test < 1.):
+        return -1
+    return 0
 
 
 
+for instance in listdir('output'):
+    for test in listdir('output/'+instance):
+        for value in listdir('output/'+instance+'/'+test):
+            path = "output/" + instance + "/" + test + "/" + value + "/";
+            summarize(path)
+            
+outputfile = open("plotscript", "w");
 
-for test_dir in listdir('output'):
-    for dir in listdir('output/'+test_dir):
-        summarize("output/" + test_dir + "/" + dir + "/")
+for instance in listdir('output'):
+    path_ref = "output/" + instance + "/no-redundancy/0/"
+    for test in listdir('output/'+instance):
+        outputfile.write("set title \""+instance+"\"\n")
+        for value in listdir('output/'+instance+'/'+test):
+            path_test = "output/" + instance + "/" + test + "/" + value + "/";
+            if (isfile(path_test + "stats")):
 
+                compare(path_ref, path_test)
+
+                outputfile.write("plot \"" + path_ref + "stats\"" +\
+                        " using 1:4 with lines linetype rgb \"#000000ff" + \
+                        "\" title ''\n")
+                outputfile.write("replot \"" + path_ref + "stats\"" + \
+                        " using 1:2:6 with filledcurves closed " + \
+                        "linetype rgb \"#880000ff" + "\" title \"no redundancy\"\n")
+                outputfile.write("replot \"" + path_test + "stats\"" +\
+                        " using 1:4 with lines linetype rgb \"#00ff0000" + \
+                        "\" title ''\n")
+                outputfile.write("replot \"" + path_test + "stats\"" + \
+                        " using 1:2:6 with filledcurves closed " + \
+                        "linetype rgb \"#88ff0000" + "\" title \"" + test + " " + value + "\"\n")
+                outputfile.write("pause -1\n")
+
+
+outputfile.close()

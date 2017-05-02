@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cmath> // sqrt
+#include <GA/Engine.h>
 
 template<class Individual>
 GA::Engine<Individual>::Engine(Objective<Individual> &objective,
@@ -92,24 +93,30 @@ double GA::Engine<Individual>::step() {
 template<class Individual>
 double GA::Engine<Individual>::step(unsigned int numberStep) {
     typename Population::iterator it1, it2;
-    std::uniform_int_distribution<size_t> distrib;
+    std::uniform_int_distribution<size_t> unif_distrib(0,population.size()*(population.size()+1)/2);
     Individual individual;
+    Population new_population;
 
     for (unsigned int i = numberStep; i != 0; --i) {
 
-        population = selection(population);
+        new_population = selection(population);
 
-        while (population.size() < populationSize) {
+        while (new_population.size() < populationSize) {
             it1 = population.begin();
             it2 = population.begin();
-            distrib.param(std::uniform_int_distribution<size_t>::param_type(0, population.size()-1));
-            std::advance(it1, distrib(rnd));
-            std::advance(it2, distrib(rnd));
+            /*
+             * We choose random parents after the following probability distribution :
+             * P(i) = (n-i) / (n(n+1)/2)
+             */
+            std::advance(it1, population.size() - std::floor(std::sqrt(1+8*unif_distrib(rnd))-1.5));
+            std::advance(it2, population.size() - std::floor(std::sqrt(1+8*unif_distrib(rnd))-1.5));
 
-            individual = std::move(mutation(crossover(it1->second, it2->second)));
+            individual = mutation(crossover(it1->second, it2->second));
 
-            population.emplace(objective(individual), individual);
+            new_population.emplace(objective(individual), individual);
         }
+
+        std::swap(new_population, population);
     }
     return population.cbegin()->first;
 }

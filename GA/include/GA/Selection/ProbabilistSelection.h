@@ -27,7 +27,6 @@ namespace GA {
         ProbabilistSelection &operator=(const ProbabilistSelection&) = default;
         ProbabilistSelection &operator=(ProbabilistSelection&&) = default;
 
-        Population operator()(Population &population) override;
         Population operator()(const Population &population) override;
 
     };
